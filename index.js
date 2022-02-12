@@ -23,7 +23,15 @@ const name = platform === 'windows' ? 'zig.exe' : 'zig';
 const binaryPath = path.join(installDirectory, name);
 
 export async function install() {
-  // await $`rm -rf ${installDirectory}`;
+  try {
+    await fs.access(binaryPath);
+    console.log(
+      `${name} is already installed, did you mean to reinstall?\nlocation: ${binaryPath}`,
+    );
+    process.exit(0);
+  } catch {}
+
+  await $`rm -rf ${installDirectory}`;
   await $`mkdir -p ${installDirectory}`;
 
   // TODO: currently hardcoded, find a way to fetch the latest version

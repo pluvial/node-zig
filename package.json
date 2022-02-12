@@ -1,6 +1,6 @@
 {
   "name": "@ziglang/cli",
-  "version": "0.0.3",
+  "version": "0.0.4-beta.0",
   "description": "",
   "type": "module",
   "exports": "./index.js",
@@ -25,7 +25,8 @@
     "zig": "node zig.js",
     "zig-install": "node install.js",
     "zig-reinstall": "node reinstall.js",
-    "zig-uninstall": "node uninstall.js"
+    "zig-uninstall": "node uninstall.js",
+    "prepublish": "rm -rf bin"
   },
   "dependencies": {
     "binary-install": "^0.1.1",

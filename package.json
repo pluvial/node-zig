@@ -1,0 +1,38 @@
+{
+  "name": "@ziglang/cli",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "exports": "./index.js",
+  "main": "index.js",
+  "bin": {
+    "zig": "index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "postinstall": "node index.js install",
+    "preuninstall": "node index.js uninstall",
+    "zig:run": "node index.js run",
+    "zig:install": "node index.js install",
+    "zig:uninstall": "node index.js uninstall"
+  },
+  "dependencies": {
+    "binary-install": "^0.1.1",
+    "zx": "^5.0.0"
+  },
+  "keywords": [
+    "zig",
+    "cli"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pluvial/node-zig/issues"
+  },
+  "homepage": "https://github.com/pluvial/node-zig#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pluvial/node-zig.git"
+  }
+}

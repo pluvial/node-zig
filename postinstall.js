@@ -15,9 +15,13 @@ try {
       process.exit(0);
     }
   } catch {}
-  // remove the empty placeholder file
-  await uninstall();
   try {
+    // remove the node_modules/.bin symlinks from the PATH before checking if a
+    // zig is installed system-wide
+    const pathDirs = process.env.PATH.split(':');
+    process.env.PATH = pathDirs
+      .filter(dir => !dir.endsWith('node_modules/.bin'))
+      .join(':');
     // check if there's already an installed zig binary
     const { stdout: installedVersion } = await $`zig version`;
     if (stdout.length !== 0) {
@@ -31,7 +35,7 @@ try {
     }
   } catch (error) {}
   console.log('Did not detect zig in system, will be installed locally');
-  // force is not strictly necessary, but it's used to skip re-checking the file
+  // use force to remove the empty placeholder and skip re-checking the file
   await install({ force: true });
 } catch (error) {
   console.error(error);

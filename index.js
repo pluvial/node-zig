@@ -22,6 +22,10 @@ export const installDirectory = path.join(__dirname, 'bin');
 export const name = platform === 'windows' ? 'zig.exe' : 'zig';
 export const binaryPath = path.join(installDirectory, name);
 
+// TODO: currently hardcoded, find a way to fetch the latest version
+// const version = require('./package.json').version;
+export const version = '0.10.0-dev.675+beb275b37';
+
 export async function install({ force = false } = {}) {
   if (!force) {
     try {
@@ -41,9 +45,6 @@ export async function install({ force = false } = {}) {
   await uninstall();
   await $`mkdir -p ${installDirectory}`;
 
-  // TODO: currently hardcoded, find a way to fetch the latest version
-  // const version = require('./package.json').version;
-  const version = '0.10.0-dev.675+beb275b37';
   const url = `https://ziglang.org/builds/zig-${platform}-${arch}-${version}.tar.xz`;
 
   await $`curl -fsSL ${url} | tar xJ -C ${installDirectory} --strip-components=1`;

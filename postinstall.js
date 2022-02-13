@@ -28,14 +28,16 @@ try {
       .filter(dir => !dir.endsWith('node_modules/.bin'))
       .join(':');
     // check if there's already an installed zig binary
-    const { stdout: systemZig } = await $`which zig`;
-    const { stdout: systemZigVersion } = await $`zig version`;
+    const which = await $`which zig`;
+    const zigVersion = await $`zig version`;
+    const systemZig = which.stdout.trim();
+    const systemZigVersion = zigVersion.stdout.trim();
     if (systemZig.length !== 0 && systemZigVersion.length !== 0) {
       console.log(
         `Skipping zig installation, ${systemZigVersion} already installed in system`,
       );
       console.log(`Creating symlink to: ${systemZig}`);
-      $`ln -sf ${systemZig} ${binaryPath}`;
+      await $`ln -sf ${systemZig} ${binaryPath}`;
       console.log(
         `Manually run the zig-install script to install ${version} locally`,
       );

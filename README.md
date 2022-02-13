@@ -42,6 +42,18 @@ npm exec zig-install
 }
 ```
 
+## Notes and TODOs
+
+Priority:
+
+- Handle versions, ideally it should be possible to track upstream Zig releases as tags, `latest` for stable releases, `next` to track master builds for example.
+- Better cross-platform support, only tested on Debian on WSL2 so far, will test on native Arch Linux and macOS later. Should work well on most UNIX-like environments with `curl`, `tar`, and `xz`. Also tested deployment using Cloudflare Pages, Netlify, and Vercel (needed to manually `yum install xz` in the install command).
+
+Explore:
+
+- Provide a JS API for common zig CLI functionality (`build`, `build-lib`, `fmt`, `run`, `test`, `translate-c`, etc.)
+- Compile Zig's `std.zig` functions into Wasm (export C-compatible functions), provide a JS API for the raw compiler functionality (tokenizer, parser)
+
 ## Inspiration
 
 - [binary-install](https://github.com/EverlastingBugstopper/binary-install)

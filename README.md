@@ -16,3 +16,12 @@ npm i -D @ziglang/cli # or yarn or pnpm
 ./node_modules/.bin/zig-reinstall # reinstalls zig
 ./node_modules/.bin/zig-uninstall # uninstalls zig
 ```
+
+## Inspiration
+
+- [binary-install](https://github.com/EverlastingBugstopper/binary-install)
+- [wasm-pack npm module](https://github.com/rustwasm/wasm-pack/tree/master/npm)
+
+## License
+
+[MIT](LICENSE)

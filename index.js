@@ -24,11 +24,16 @@ const binaryPath = path.join(installDirectory, name);
 
 export async function install() {
   try {
-    await fs.access(binaryPath);
-    console.log(
-      `${name} is already installed, did you mean to reinstall?\nlocation: ${binaryPath}`,
-    );
-    process.exit(0);
+    // an empty ./bin/zig file is used as a placeholder for npm/pnpm/yarn to
+    // create the bin symlink, so the file exists but will have a zero size in
+    // the base case, check for it here
+    const stats = await fs.access(binaryPath);
+    if (stats.size !== 0) {
+      console.log(
+        `${name} is already installed, did you mean to reinstall?\nlocation: ${binaryPath}`,
+      );
+      process.exit(0);
+    }
   } catch {}
 
   await $`rm -rf ${installDirectory}`;

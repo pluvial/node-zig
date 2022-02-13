@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-import { install, uninstall } from './index.js';
+import { install } from './index.js';
 
 try {
-  await uninstall();
-  await install();
+  await install({ force: true });
 } catch (error) {
   console.error(error);
   process.exit(1);

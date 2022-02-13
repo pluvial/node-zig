@@ -18,25 +18,27 @@ const platform = {
   win32: 'windows',
 }[process.platform];
 
-const installDirectory = path.join(__dirname, 'bin');
-const name = platform === 'windows' ? 'zig.exe' : 'zig';
-const binaryPath = path.join(installDirectory, name);
+export const installDirectory = path.join(__dirname, 'bin');
+export const name = platform === 'windows' ? 'zig.exe' : 'zig';
+export const binaryPath = path.join(installDirectory, name);
 
-export async function install() {
-  try {
-    // an empty ./bin/zig file is used as a placeholder for npm/pnpm/yarn to
-    // create the bin symlink, so the file exists but will have a zero size in
-    // the base case, check for it here
-    const stats = await fs.access(binaryPath);
-    if (stats.size !== 0) {
-      console.log(
-        `${name} is already installed, did you mean to reinstall?\nlocation: ${binaryPath}`,
-      );
-      process.exit(0);
-    }
-  } catch {}
+export async function install({ force = false } = {}) {
+  if (!force) {
+    try {
+      // an empty ./bin/zig file is used as a placeholder for npm/pnpm/yarn to
+      // create the bin symlink, so the file exists but will have a zero size in
+      // the base case, check for it here
+      const stats = await fs.stat(binaryPath);
+      if (stats.size !== 0) {
+        console.log(
+          `${name} is already installed, did you mean to reinstall?\nlocation: ${binaryPath}`,
+        );
+        return;
+      }
+    } catch {}
+  }
 
-  await $`rm -rf ${installDirectory}`;
+  await uninstall();
   await $`mkdir -p ${installDirectory}`;
 
   // TODO: currently hardcoded, find a way to fetch the latest version
@@ -61,7 +63,7 @@ export async function run(...args) {
       // console.error({ stderr: error.stderr, stdout: error.stdout });
       process.exit(error.exitCode);
     }
-    console.error(error);
+    throw error;
   }
 }
 

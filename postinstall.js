@@ -6,10 +6,15 @@ import { binaryPath, install, uninstall, version } from './index.js';
 
 try {
   try {
+    const stats = await fs.lstat(binaryPath);
+    // if the binary is a symlink, it should link to the system-wide zig
+    if (stats.isSymbolicLink()) {
+      console.log('Skipping zig installation, symlink to system zig exists');
+      process.exit(0);
+    }
     // an empty ./bin/zig file is used as a placeholder for npm/pnpm/yarn to
     // create the bin symlink, so if the file already exists and has non-zero
-    // size, then zig is already installed
-    const stats = await fs.stat(binaryPath);
+    // size, and is not a symlink, then zig is already installed locally
     if (stats.size !== 0) {
       console.log('Skipping zig installation, binary exists');
       process.exit(0);
@@ -17,17 +22,20 @@ try {
   } catch {}
   try {
     // remove the node_modules/.bin symlinks from the PATH before checking if a
-    // zig is installed system-wide
+    // zig is installed system-wide, to avoid hitting the symlink
     const pathDirs = process.env.PATH.split(':');
     process.env.PATH = pathDirs
       .filter(dir => !dir.endsWith('node_modules/.bin'))
       .join(':');
     // check if there's already an installed zig binary
-    const { stdout: installedVersion } = await $`zig version`;
-    if (stdout.length !== 0) {
+    const { stdout: systemZig } = await $`which zig`;
+    const { stdout: systemZigVersion } = await $`zig version`;
+    if (systemZig.length !== 0 && systemZigVersion.length !== 0) {
       console.log(
-        `Skipping zig installation, ${installedVersion} already installed in system`,
+        `Skipping zig installation, ${systemZigVersion} already installed in system`,
       );
+      console.log(`Creating symlink to: ${systemZig}`);
+      $`ln -sf ${systemZig} ${binaryPath}`;
       console.log(
         `Manually run the zig-install script to install ${version} locally`,
       );

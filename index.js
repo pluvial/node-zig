@@ -32,11 +32,11 @@ export async function install({ force = false } = {}) {
       // an empty ./bin/zig file is used as a placeholder for npm/pnpm/yarn to
       // create the bin symlink, so the file exists but will have a zero size in
       // the base case, check for it here
-      const stats = await fs.stat(binaryPath);
-      if (stats.size !== 0) {
-        console.log(
-          `${name} is already installed, did you mean to reinstall?\nlocation: ${binaryPath}`,
-        );
+      const stats = await fs.lstat(binaryPath);
+      if (stats.isSymbolicLink()) {
+        console.log(`Replacing symlink with local installation: ${binaryPath}`);
+      } else if (stats.size !== 0) {
+        console.log(`${name} is already installed, did you mean to reinstall?`);
         return;
       }
     } catch {}

@@ -24,7 +24,7 @@ export const binaryPath = path.join(installDirectory, name);
 
 // TODO: currently hardcoded, find a way to fetch the latest version
 // const version = require('./package.json').version;
-export const version = '0.10.0-dev.675+beb275b37';
+export const version = '0.10.0-dev.847+2e1c16d64';
 
 export async function install({ force = false } = {}) {
   if (!force) {

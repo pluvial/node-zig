@@ -1,40 +1,7 @@
 {
-  "name": "@ziglang/cli",
-  "version": "0.0.6",
-  "description": "",
-  "type": "module",
-  "exports": "./index.js",
-  "main": "index.js",
-  "bin": {
-    "zig": "bin/zig",
-    "zig-cli": "zig.js",
-    "zig-install": "install.js",
-    "zig-postinstall": "postinstall.js",
-    "zig-reinstall": "reinstall.js",
-    "zig-uninstall": "uninstall.js"
-  },
-  "files": [
-    "index.js",
-    "install.js",
-    "postinstall.js",
-    "reinstall.js",
-    "uninstall.js",
-    "zig.js"
-  ],
-  "scripts": {
-    "postinstall": "node postinstall.js",
-    "preuninstall": "node uninstall.js",
-    "zig": "node zig.js",
-    "zig-install": "node install.js",
-    "zig-postinstall": "node postinstall.js",
-    "zig-reinstall": "node reinstall.js",
-    "zig-uninstall": "node uninstall.js",
-    "prepublish": "rm -rf bin && git checkout bin"
-  },
-  "dependencies": {
-    "binary-install": "^0.1.1",
-    "zx": "^5.0.0"
-  },
+  "name": "node-zig",
+  "version": "0.0.0",
+  "scripts": {},
   "keywords": [
     "zig",
     "cli"

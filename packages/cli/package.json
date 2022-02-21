@@ -1,0 +1,51 @@
+{
+  "name": "@ziglang/cli",
+  "version": "0.0.7",
+  "description": "",
+  "type": "module",
+  "exports": "./index.js",
+  "main": "index.js",
+  "bin": {
+    "zig": "bin/zig",
+    "zig-cli": "zig.js",
+    "zig-install": "install.js",
+    "zig-postinstall": "postinstall.js",
+    "zig-reinstall": "reinstall.js",
+    "zig-uninstall": "uninstall.js"
+  },
+  "files": [
+    "index.js",
+    "install.js",
+    "postinstall.js",
+    "reinstall.js",
+    "uninstall.js",
+    "zig.js"
+  ],
+  "scripts": {
+    "postinstall": "node postinstall.js",
+    "preuninstall": "node uninstall.js",
+    "zig": "node zig.js",
+    "zig-install": "node install.js",
+    "zig-postinstall": "node postinstall.js",
+    "zig-reinstall": "node reinstall.js",
+    "zig-uninstall": "node uninstall.js",
+    "prepublish": "rm -rf bin && git checkout bin"
+  },
+  "dependencies": {
+    "zx": "^5.0.0"
+  },
+  "keywords": [
+    "zig",
+    "cli"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pluvial/node-zig/issues"
+  },
+  "homepage": "https://github.com/pluvial/node-zig/tree/main/packages/cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pluvial/node-zig.git",
+    "directory": "packages/cli"
+  }
+}

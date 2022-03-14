@@ -43,7 +43,7 @@ npm exec zig-install
 Priority:
 
 - Handle versions, ideally it should be possible to track upstream Zig releases as tags, `latest` for stable releases, `next` to track master builds for example.
-- Better cross-platform support, only tested on Debian on WSL2 so far, will test on native Arch Linux and macOS later. Should work well on most UNIX-like environments with `curl`, `tar`, and `xz`. Also tested deployment using Cloudflare Pages, Netlify, and Vercel (needed to manually `yum install xz` in the install command).
+- Better cross-platform support, tested on Debian on WSL2, native Arch Linux and macOS Monterey. Should work well on most UNIX-like environments with `curl`, `tar`, and `xz`. Also tested deployment using Cloudflare Pages, Netlify, and Vercel (needed to manually `yum install xz` in the install command).
 
 Explore:
 

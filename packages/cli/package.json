@@ -1,6 +1,7 @@
 {
   "name": "@ziglang/cli",
   "version": "0.0.10",
+  "zig_version": "0.10.0-dev.1717+91eb1af91",
   "description": "",
   "type": "module",
   "exports": "./index.js",
@@ -32,7 +33,8 @@
     "prepublish": "rm -rf bin && git checkout bin"
   },
   "dependencies": {
-    "zx": "^6.0.7"
+    "download": "^8.0.0",
+    "which": "^2.0.2"
   },
   "keywords": [
     "zig",

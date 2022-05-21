@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 
+import { exec, execFile } from 'child_process';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as url from 'url';
+import { promisify } from 'util';
 import download from 'download';
 import which from 'which';
-import util from 'util';
-import { exec, spawn } from 'child_process';
-const execAsync = util.promisify(exec);
-const spawnAsync = util.promisify(spawn);
+
+const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
+
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -57,23 +59,6 @@ export async function install({ force = false } = {}) {
   await download(url, installDirectory, { strip: 1 });
 }
 
-export async function run(...args) {
-  try {
-    await fs.access(binaryPath);
-  } catch (err) {
-    throw new Error(`You must install ${name} before you can run it`);
-  }
-
-  try {
-    await spawnAsync(binaryPath, args, { stdio: 'inherit' });
-  } catch (error) {
-    if (error.code) {
-      process.exit(error.code);
-    }
-    throw error;
-  }
-}
-
 export async function uninstall() {
   await fs.rm(installDirectory, { recursive: true });
 }
@@ -99,11 +84,11 @@ export async function checkInstallation() {
     // zig is installed system-wide, to avoid hitting the symlink
     const pathSep = windows ? ';' : ':';
     const pathDirs = process.env.PATH.split(pathSep);
-    process.env.PATH = pathDirs
+    const path = pathDirs
       .filter(dir => !dir.endsWith(path.join('node_modules', '.bin')))
       .join(':');
     // check if there's already an installed zig binary
-    const systemZig = await which('zig');
+    const systemZig = await which('zig', { path });
 
     const zigVersion = await execAsync('zig version');
     const systemZigVersion = zigVersion.stdout.trim();

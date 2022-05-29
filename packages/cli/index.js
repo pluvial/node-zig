@@ -86,7 +86,7 @@ export async function checkInstallation() {
     const pathDirs = process.env.PATH.split(pathSep);
     const path = pathDirs
       .filter(dir => !dir.endsWith(path.join('node_modules', '.bin')))
-      .join(':');
+      .join(pathSep);
     // check if there's already an installed zig binary
     const systemZig = await which('zig', { path });
 

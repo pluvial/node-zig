@@ -3,6 +3,7 @@
 import { install, checkInstallation } from './index.js';
 
 try {
+  console.log("Running post install script");
   await checkInstallation();
   // use force to remove the empty placeholder and skip re-checking the file
   await install({ force: true });

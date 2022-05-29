@@ -7,10 +7,11 @@ import * as url from 'url';
 import { promisify } from 'util';
 import download from 'download';
 import which from 'which';
+import decompressUnzip from 'decompress-unzip';
+import decompressTarxz from '@felipecrs/decompress-tarxz';
 
 const execAsync = promisify(exec);
 const execFileAsync = promisify(execFile);
-
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -55,8 +56,13 @@ export async function install({ force = false } = {}) {
   const version = JSON.parse(data).zig_version;
 
   const url = `https://ziglang.org/builds/zig-${platform}-${arch}-${version}.${extension}`;
+  console.log(`Download zig from ${url} into ${installDirectory}`);
 
-  await download(url, installDirectory, { strip: 1 });
+  await download(url, installDirectory, {
+    plugins: [decompressUnzip(), decompressTarxz()],
+    extract: true,
+    strip: 1
+  });
 }
 
 export async function uninstall() {
@@ -64,6 +70,8 @@ export async function uninstall() {
 }
 
 export async function checkInstallation() {
+  console.log("Checking Zig installation");
+
   try {
     const stats = await fs.lstat(binaryPath);
     // if the binary is a symlink, it should link to the system-wide zig
@@ -78,26 +86,34 @@ export async function checkInstallation() {
       console.log('Skipping zig installation, binary exists');
       process.exit(0);
     }
-  } catch {}
+  } catch (error) {
+    if (process.env.DEBUG) {
+      console.log(error);
+    }
+  }
+
   try {
     // remove the node_modules/.bin symlinks from the PATH before checking if a
     // zig is installed system-wide, to avoid hitting the symlink
     const pathSep = windows ? ';' : ':';
     const pathDirs = process.env.PATH.split(pathSep);
-    const path = pathDirs
+    const osPath = pathDirs
       .filter(dir => !dir.endsWith(path.join('node_modules', '.bin')))
       .join(pathSep);
     // check if there's already an installed zig binary
-    const systemZig = await which('zig', { path });
+    const systemZig = await which('zig', { osPath });
+    console.log(`systemZig: ${systemZig}`);
 
     const zigVersion = await execAsync('zig version');
     const systemZigVersion = zigVersion.stdout.trim();
+    console.log(`systemZigVersion: ${systemZigVersion}`);
 
     if (systemZig.length !== 0 && systemZigVersion.length !== 0) {
       console.log(
         `Skipping zig installation, ${systemZigVersion} already installed in system`,
       );
       console.log(`Creating symlink to: ${systemZig}`);
+
       await fs.unlink(binaryPath);
       await fs.link(systemZig, binaryPath);
       console.log(
@@ -105,6 +121,11 @@ export async function checkInstallation() {
       );
       process.exit(0);
     }
-  } catch (error) {}
+  } catch (error) {
+    if (process.env.DEBUG) {
+      console.log(error);
+    }
+  }
+
   console.log('Did not detect zig in system, will be installed locally');
 }

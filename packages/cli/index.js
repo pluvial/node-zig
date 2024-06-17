@@ -26,7 +26,7 @@ export const binaryPath = path.join(installDirectory, name);
 
 // TODO: currently hardcoded, find a way to fetch the latest version
 // const version = require('./package.json').version;
-export const version = '0.12.0-dev.47+0461a64a9';
+export const version = '0.14.0-dev.42+17f14e1d6';
 export const extension = windows ? 'zip' : 'tar.xz';
 
 export async function install({ force = false } = {}) {

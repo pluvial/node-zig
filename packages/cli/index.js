@@ -24,10 +24,13 @@ export const installDirectory = path.join(__dirname, 'bin');
 export const name = windows ? 'zig.exe' : 'zig';
 export const binaryPath = path.join(installDirectory, name);
 
-// TODO: currently hardcoded, find a way to fetch the latest version
-// const version = require('./package.json').version;
-export const version = '0.14.0-dev.42+17f14e1d6';
-export const extension = windows ? 'zip' : 'tar.xz';
+async function getLatestBinaryUrl() {
+  const binIndexUrl = "https://ziglang.org/download/index.json";
+  const binIndex = JSON.parse(await $`curl -fsSL ${binIndexUrl}`);
+  const masterVersionIndex = binIndex.master;
+  return masterVersionIndex[`${arch}-${platform}`].tarball;
+
+}
 
 export async function install({ force = false } = {}) {
   if (!force) {
@@ -42,13 +45,13 @@ export async function install({ force = false } = {}) {
         console.log(`${name} is already installed, did you mean to reinstall?`);
         return;
       }
-    } catch {}
+    } catch { }
   }
 
   await uninstall();
   await $`mkdir -p ${installDirectory}`;
 
-  const url = `https://ziglang.org/builds/zig-${platform}-${arch}-${version}.${extension}`;
+  const url = getLatestBinaryUrl();
 
   await $`curl -fsSL ${url} | tar xJ -C ${installDirectory} --strip-components=1`;
 }

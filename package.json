@@ -1,7 +1,6 @@
 {
   "name": "node-zig",
   "version": "0.0.0",
-  "scripts": {},
   "keywords": [
     "zig",
     "cli"
@@ -15,5 +14,12 @@
     "type": "git",
     "url": "git+https://github.com/pluvial/node-zig.git"
   },
-  "packageManager": "pnpm@9.11.0+sha1.4cd20e68438613738e8f2bc9aece61eaa6b3e649"
+  "packageManager": "pnpm@9.11.0+sha1.4cd20e68438613738e8f2bc9aece61eaa6b3e649",
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  },
+  "scripts": {
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
+  }
 }

@@ -25,11 +25,10 @@ export const name = windows ? 'zig.exe' : 'zig';
 export const binaryPath = path.join(installDirectory, name);
 
 async function getLatestBinaryUrl() {
-  const binIndexUrl = "https://ziglang.org/download/index.json";
+  const binIndexUrl = 'https://ziglang.org/download/index.json';
   const binIndex = JSON.parse(await $`curl -fsSL ${binIndexUrl}`);
   const masterVersionIndex = binIndex.master;
   return masterVersionIndex[`${arch}-${platform}`].tarball;
-
 }
 
 export async function install({ force = false } = {}) {
@@ -45,7 +44,7 @@ export async function install({ force = false } = {}) {
         console.log(`${name} is already installed, did you mean to reinstall?`);
         return;
       }
-    } catch { }
+    } catch {}
   }
 
   await uninstall();

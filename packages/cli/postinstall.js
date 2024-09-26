@@ -24,23 +24,17 @@ try {
     // remove the node_modules/.bin symlinks from the PATH before checking if a
     // zig is installed system-wide, to avoid hitting the symlink
     const pathDirs = process.env.PATH.split(':');
-    process.env.PATH = pathDirs
-      .filter(dir => !dir.endsWith('node_modules/.bin'))
-      .join(':');
+    process.env.PATH = pathDirs.filter(dir => !dir.endsWith('node_modules/.bin')).join(':');
     // check if there's already an installed zig binary
     const which = await $`which zig`;
     const zigVersion = await $`zig version`;
     const systemZig = which.stdout.trim();
     const systemZigVersion = zigVersion.stdout.trim();
     if (systemZig.length !== 0 && systemZigVersion.length !== 0) {
-      console.log(
-        `Skipping zig installation, ${systemZigVersion} already installed in system`,
-      );
+      console.log(`Skipping zig installation, ${systemZigVersion} already installed in system`);
       console.log(`Creating symlink to: ${systemZig}`);
       await $`ln -sf ${systemZig} ${binaryPath}`;
-      console.log(
-        `Manually run the zig-install script to install ${version} locally`,
-      );
+      console.log(`Manually run the zig-install script to install ${version} locally`);
       process.exit(0);
     }
   } catch (error) {}

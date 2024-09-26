@@ -24,12 +24,14 @@ export const installDirectory = path.join(__dirname, 'bin');
 export const name = windows ? 'zig.exe' : 'zig';
 export const binaryPath = path.join(installDirectory, name);
 
-async function getLatestBinaryUrl() {
-  const binIndexUrl = 'https://ziglang.org/download/index.json';
-  const binIndex = JSON.parse(await $`curl -fsSL ${binIndexUrl}`);
-  const masterVersionIndex = binIndex.master;
-  return masterVersionIndex[`${arch}-${platform}`].tarball;
-}
+const index = await fetch('https://ziglang.org/download/index.json').then(response =>
+  response.json(),
+);
+const { master } = index;
+const { tarball } = master[`${arch}-${platform}`];
+// TODO: use fixed stable version if requested by user
+// export const version = '0.13.0';
+export const version = index.master.version;
 
 export async function install({ force = false } = {}) {
   if (!force) {
@@ -50,9 +52,7 @@ export async function install({ force = false } = {}) {
   await uninstall();
   await $`mkdir -p ${installDirectory}`;
 
-  const url = getLatestBinaryUrl();
-
-  await $`curl -fsSL ${url} | tar xJ -C ${installDirectory} --strip-components=1`;
+  await $`curl -fsSL ${tarball} | tar xJ -C ${installDirectory} --strip-components=1`;
 }
 
 export async function run(...args) {

@@ -32,7 +32,7 @@
     "prepublish": "rm -rf bin && git checkout bin"
   },
   "dependencies": {
-    "zx": "^8.1.2"
+    "zx": "^8.1.8"
   },
   "keywords": [
     "zig",
